@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 type Finding = { type: 'danger' | 'warn' | 'ok' | 'info'; text: string }
 type Result = {
+  stamp: string
   verdict: string
   score_efficiency: number
   score_decisions: number
@@ -11,7 +12,6 @@ type Result = {
   summary: string
   findings: Finding[]
   recommendations: string[]
-  could_be_email: boolean
   split_suggestion: string | null
   missing: string[]
 }
@@ -51,6 +51,10 @@ function scoreColor(n: number) {
   if (n >= 8) return '#2d6a3f'
   if (n >= 5) return '#8a5a00'
   return '#c8371a'
+}
+
+function isPositiveStamp(stamp: string) {
+  return stamp === 'MEETING JUSTIFIED' || stamp === 'SURPRISINGLY PRODUCTIVE'
 }
 
 export default function AnalyzePage() {
@@ -156,18 +160,19 @@ export default function AnalyzePage() {
 
       {result && (
         <div style={{ animation: 'fadeUp 0.4s ease' }}>
-          {/* Verdict block */}
+          {/* Stamp + verdict */}
           <div style={{ padding: '40px 0 36px', borderBottom: `1px solid ${border}`, marginBottom: 32 }}>
             <div style={{
               display: 'inline-block',
               fontFamily: mono, fontSize: 11, fontWeight: 500, letterSpacing: '0.15em',
-              padding: '5px 12px', border: `2px solid ${result.could_be_email ? accent : '#2d6a3f'}`,
+              padding: '5px 12px',
+              border: `2px solid ${isPositiveStamp(result.stamp) ? '#2d6a3f' : accent}`,
               borderRadius: 3, marginBottom: 20,
-              color: result.could_be_email ? accent : '#2d6a3f',
-              background: result.could_be_email ? 'rgba(200,55,26,0.05)' : 'rgba(45,106,63,0.05)',
+              color: isPositiveStamp(result.stamp) ? '#2d6a3f' : accent,
+              background: isPositiveStamp(result.stamp) ? 'rgba(45,106,63,0.05)' : 'rgba(200,55,26,0.05)',
               animation: 'stampIn 0.4s ease forwards',
             }}>
-              {result.could_be_email ? 'COULD HAVE BEEN AN EMAIL' : 'MEETING JUSTIFIED'}
+              {result.stamp}
             </div>
             <h2 style={{ fontSize: 'clamp(26px, 5vw, 40px)', fontWeight: 500, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 16 }}>
               {result.verdict}
