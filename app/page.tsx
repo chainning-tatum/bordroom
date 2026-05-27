@@ -23,7 +23,7 @@ export default function Home() {
           <span style={{ color: '#c8371a' }}>actually necessary?</span>
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.6, color: '#3a3a3a', maxWidth: 480, marginBottom: 36 }}>
-          Paste your notes. We will tell you if it could have been an email and exactly how to fix it next time.
+          Paste your notes. We'll tell you what went wrong and how to fix it next time.
         </p>
         <Link href="/analyze" style={{
           display: 'inline-block', background: '#0a0a0a', color: '#f7f4ef',
@@ -51,7 +51,7 @@ export default function Home() {
       <section style={{ padding: '48px 0', borderBottom: '1px solid rgba(10,10,10,0.12)', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
         {[
           { n: '01', t: 'Paste your meeting notes, minutes, or agenda' },
-          { n: '02', t: 'AI analyzes decisions, clarity, and efficiency' },
+          { n: '02', t: 'We analyzes decisions, clarity, and efficiency' },
           { n: '03', t: 'Get a blunt verdict and concrete next steps' },
         ].map((s, i) => (
           <>
