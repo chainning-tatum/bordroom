@@ -31,10 +31,28 @@ Be specific to the actual content. Do not give generic advice.
 Do not use em dashes anywhere in your output. Use regular dashes or rewrite the sentence naturally.
 Do not use emojis anywhere in your output.`
 
+const STAMPS = `
+Pick the single most accurate stamp from this list based on what actually happened in the meeting:
+
+- "COULD HAVE BEEN AN EMAIL" — information was presented with no real discussion or decisions needed. Could have been sent as a summary.
+- "MAKE THIS TWO MEETINGS" — two clearly distinct topics or audiences were forced into one session. People sat through things irrelevant to them.
+- "MAKE THIS THREE MEETINGS" — three or more distinct topics or audiences were crammed together with no coherent thread.
+- "SURPRISINGLY PRODUCTIVE" — real decisions were made, the right people were there, time was used well.
+- "NO DECISIONS WERE MADE" — discussion happened but nothing was resolved or agreed upon. Everyone left in the same position they arrived.
+- "ACTION ITEM GRAVEYARD" — action items were assigned but vague, undated, or unowned. They will not get done.
+- "NOBODY KNEW THE AGENDA" — the meeting lacked clear purpose or structure. Topics wandered. People were unprepared.
+- "WRONG PEOPLE IN THE ROOM" — key decision-makers were absent, or too many irrelevant attendees were present.
+- "RAN OVER FOR NO REASON" — the meeting exceeded its time without producing proportional value.
+- "NEEDS A COMPLETE RETHINK" — the meeting was structurally broken in multiple ways. Not just inefficient but the wrong format entirely.
+- "MOSTLY WASTED" — some value was produced but the majority of time and attendance was not justified.
+- "MEETING JUSTIFIED" — use this only when decisions were clearly made, the right people attended, and outcomes were concrete. Reserve for genuinely well-run meetings.
+`
+
 const USER_PROMPT = (notes: string) => `Analyze these meeting notes and return ONLY this JSON structure:
 
 {
-  "verdict": "short punchy verdict phrase, written like a human (e.g. 'could have been an email', 'make this two meetings', 'surprisingly productive', 'no decisions were made', 'action item graveyard', 'nobody knew the agenda')",
+  "stamp": "one stamp chosen from the provided list",
+  "verdict": "a short punchy phrase that elaborates on the stamp in plain language, specific to this meeting",
   "score_efficiency": <number 1-10>,
   "score_decisions": <number 1-10>,
   "score_clarity": <number 1-10>,
@@ -43,16 +61,18 @@ const USER_PROMPT = (notes: string) => `Analyze these meeting notes and return O
     { "type": "danger|warn|ok|info", "text": "specific finding, under 8 words, no em dashes" }
   ],
   "recommendations": ["specific actionable recommendation, written naturally, no em dashes"],
-  "could_be_email": <true|false>,
-  "split_suggestion": null or "concrete plain-English description of how to split this meeting",
+  "split_suggestion": null or "concrete plain-English description of how to split this meeting, only include if the stamp is MAKE THIS TWO MEETINGS or MAKE THIS THREE MEETINGS",
   "missing": ["what was notably absent or unresolved, short phrase"]
 }
 
+Stamp guidance:
+${STAMPS}
+
 Rules:
 - findings: 3-5 items, specific to these notes
-- recommendations: 2-4 items, concrete not generic
+- recommendations: 2-4 items, concrete not generic  
 - missing: 2-4 items
-- verdict must be punchy and direct, not bland
+- verdict must be punchy and specific to this meeting, not a restatement of the stamp
 - no em dashes anywhere
 - no emojis anywhere
 
