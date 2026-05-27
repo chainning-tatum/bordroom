@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import styles from './page.module.css'
+import styles from './analyze.module.css'
 
 type Finding = { type: 'danger' | 'warn' | 'ok' | 'info'; text: string }
 type Result = {
