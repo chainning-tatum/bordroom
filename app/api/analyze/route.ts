@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Simple in-memory rate limiter (per IP, resets on server restart)
-// For production, swap this for Upstash Redis — see README
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT = 10       // requests per window
-const RATE_WINDOW = 60_000  // 1 minute in ms
-const MAX_CHARS = 15_000    // ~3000 words — plenty for any meeting notes
+const RATE_LIMIT = 10
+const RATE_WINDOW = 60_000
+const MAX_CHARS = 15_000
 
 function getIp(req: NextRequest): string {
   return (
@@ -28,32 +26,35 @@ function checkRateLimit(ip: string): boolean {
 }
 
 const SYSTEM_PROMPT = `You are BORDROOM, a brutally honest but constructive meeting analyzer.
-Analyze meeting notes and return ONLY a JSON object — no markdown, no preamble, no explanation.
-Be specific to the actual content. Do not give generic advice.`
+Analyze meeting notes and return ONLY a JSON object. No markdown, no preamble, no explanation.
+Be specific to the actual content. Do not give generic advice.
+Do not use em dashes anywhere in your output. Use regular dashes or rewrite the sentence naturally instead.
+Do not use emojis anywhere in your output.`
 
 const USER_PROMPT = (notes: string) => `Analyze these meeting notes and return ONLY this JSON structure:
 
 {
-  "verdict": "short punchy verdict phrase (e.g. 'could\\'ve been an email', 'make this two meetings', 'surprisingly productive', 'decisions? never heard of them', 'action item graveyard', 'where was the agenda?', 'a meeting about scheduling meetings')",
-  "verdict_emoji": "single relevant emoji",
+  "verdict": "short punchy verdict phrase, written like a human (e.g. 'could have been an email', 'make this two meetings', 'surprisingly productive', 'no decisions were made', 'action item graveyard', 'nobody knew the agenda')",
   "score_efficiency": <number 1-10>,
   "score_decisions": <number 1-10>,
   "score_clarity": <number 1-10>,
-  "summary": "2-3 sentences honest assessment of what actually happened",
+  "summary": "2-3 sentences, honest and direct, written like a person not a robot. No em dashes. No emojis.",
   "findings": [
-    { "type": "danger|warn|ok|info", "text": "specific finding under 8 words" }
+    { "type": "danger|warn|ok|info", "text": "specific finding, under 8 words, no em dashes" }
   ],
-  "recommendations": ["specific actionable recommendation"],
+  "recommendations": ["specific actionable recommendation, written naturally, no em dashes"],
   "could_be_email": <true|false>,
-  "split_suggestion": null or "concrete description of how to split this meeting",
-  "missing": ["what was notably absent or unresolved"]
+  "split_suggestion": null or "concrete plain-English description of how to split this meeting",
+  "missing": ["what was notably absent or unresolved, short phrase"]
 }
 
 Rules:
 - findings: 3-5 items, specific to these notes
 - recommendations: 2-4 items, concrete not generic
 - missing: 2-4 items
-- verdict must be punchy and memorable, not bland
+- verdict must be punchy and direct, not bland
+- no em dashes anywhere
+- no emojis anywhere
 
 Meeting notes:
 ${notes}`
@@ -102,12 +103,19 @@ export async function POST(req: NextRequest) {
     })
 
     const data = await response.json()
+
+    if (!response.ok) {
+      console.error('Anthropic error:', JSON.stringify(data))
+      return NextResponse.json({ error: 'Analysis failed. Please try again.' }, { status: 500 })
+    }
+
     const raw = data.content?.map((b: { text?: string }) => b.text || '').join('') || ''
     const clean = raw.replace(/```json|```/g, '').trim()
     const result = JSON.parse(clean)
 
     return NextResponse.json(result)
-  } catch {
+  } catch (err) {
+    console.error('Parse or fetch error:', err)
     return NextResponse.json({ error: 'Analysis failed. Please try again.' }, { status: 500 })
   }
 }
