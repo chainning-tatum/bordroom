@@ -1,0 +1,152 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.header {
+  padding: 48px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.tagline {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+/* Hero */
+.hero {
+  padding: 80px 0 64px;
+  border-bottom: 1px solid var(--border);
+}
+.heroTitle {
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.heroTitle em {
+  font-style: normal;
+  color: var(--accent);
+}
+.heroBody {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 480px;
+  margin-bottom: 36px;
+}
+.cta {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: background 0.15s, transform 0.1s;
+}
+.cta:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+.cta:active {
+  transform: translateY(0);
+}
+
+/* Verdicts */
+.verdicts {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--border);
+}
+.verdictsLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.verdictsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.verdictChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid var(--border-strong);
+  border-radius: 99px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+.chipEmoji {
+  font-size: 14px;
+}
+
+/* How it works */
+.how {
+  padding: 48px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.howStep {
+  flex: 1;
+}
+.stepNum {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.howStep p {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.howDivider {
+  font-size: 18px;
+  color: var(--ink-4);
+  padding-top: 4px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  padding: 32px 0 48px;
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+@media (max-width: 540px) {
+  .how {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .howDivider { display: none; }
+}

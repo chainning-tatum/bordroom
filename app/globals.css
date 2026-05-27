@@ -1,0 +1,83 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0a0a0a;
+  --ink-2: #3a3a3a;
+  --ink-3: #888;
+  --ink-4: #bbb;
+  --paper: #f7f4ef;
+  --paper-2: #edeae3;
+  --paper-3: #e0dcd4;
+  --accent: #c8371a;
+  --accent-2: #e85d3f;
+  --ok: #2d6a3f;
+  --warn: #8a5a00;
+  --border: rgba(10,10,10,0.12);
+  --border-strong: rgba(10,10,10,0.25);
+  --font-sans: var(--font-sans), 'DM Sans', sans-serif;
+  --font-mono: var(--font-mono), 'DM Mono', monospace;
+  --radius: 4px;
+  --radius-lg: 8px;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1, h2, h3 { font-weight: 500; letter-spacing: -0.02em; }
+
+/* Inputs */
+textarea, input[type="text"] {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: white;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  width: 100%;
+  resize: vertical;
+  transition: border-color 0.15s;
+  outline: none;
+}
+textarea:focus, input[type="text"]:focus {
+  border-color: var(--ink);
+}
+
+/* Buttons */
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+/* Utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+}
+
+/* Animations */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes stamp-in {
+  0% { opacity: 0; transform: scale(1.4) rotate(-8deg); }
+  60% { opacity: 1; transform: scale(0.95) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-4deg); }
+}
