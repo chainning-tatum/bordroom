@@ -28,7 +28,7 @@ function checkRateLimit(ip: string): boolean {
 const SYSTEM_PROMPT = `You are BORDROOM, a brutally honest but constructive meeting analyzer.
 Analyze meeting notes and return ONLY a JSON object. No markdown, no preamble, no explanation.
 Be specific to the actual content. Do not give generic advice.
-Do not use em dashes anywhere in your output. Use regular dashes or rewrite the sentence naturally instead.
+Do not use em dashes anywhere in your output. Use regular dashes or rewrite the sentence naturally.
 Do not use emojis anywhere in your output.`
 
 const USER_PROMPT = (notes: string) => `Analyze these meeting notes and return ONLY this JSON structure:
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result)
   } catch (err) {
-    console.error('Parse or fetch error:', err)
+    console.error('Error:', err)
     return NextResponse.json({ error: 'Analysis failed. Please try again.' }, { status: 500 })
   }
 }
